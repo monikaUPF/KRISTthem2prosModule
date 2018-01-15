@@ -34,25 +34,26 @@ def coordination(sentence, cdList, verbList, propcount, spcount, endcoord, start
 	# CHEKC HERE
 	if coordspan > startcoord :
 		if verb_m != "" and c.lemma == "und":
-			print "coord1"
+			#print "coord1"
 			propcount = writeProp(sentence, propcount, endprop1, startcoord, -1)
 			thematicity(sentence, verb_m, endprop1, spcount, startcoord)
 		elif verb_m != "" and c.lemma != "und":
-			print "coord2"
+			#print "coord2"
 			propcount = writeProp(sentence, propcount, endprop1, startcoord)
 			thematicity(sentence, verb_m, endprop1, spcount, startcoord)
 		elif coord_v != "" and coordspan < coord_v:
-			print "coord3"
+			#print "coord3"
 			propcount = writeProp(sentence, propcount, endcoord, coordspan)
 			thematicity(sentence, coord_v, endcoord, spcount, coordspan)
-		else:
-			print "Something wrong with position in Coordination"
+		#else:
+			#print "Something wrong with position in Coordination"
 	return propcount, spcount, coordspan
 
 #############################################################################
 # Function Write thematicity ## Frontal specifiers (before the proposition starts are not annotated)
 # Note in order to write a specifier, spcount must be passed, otherwise a T1 is written
 def writeThem (sentence, end, start = 1, spcount = 0):
+	#print "writing thematicity"
 	if end == start:
 		if spcount == 0:
 			endThem = sentence.tokens[str(end)]
@@ -85,7 +86,7 @@ def writeThem (sentence, end, start = 1, spcount = 0):
 		if spcount == 0:
 			endThem = sentence.tokens[str(end)]
 			if endThem.them == "_":
-				#print "Wr T1"
+				#print "Wr T1 beg = ", beginThem.id, " end = ", endThem.id
 				endThem.them = "]T1"
 			elif "T1" in endThem.them :
 				#print "Wr T1"
@@ -103,7 +104,7 @@ def writeThem (sentence, end, start = 1, spcount = 0):
 # NOTE: special labels for zu construction and first part of coordinated sentences are introduced as labels Pz and Pc
 # CHECK HERE WHY IT IS WRITING TWO PROP WHEN THERE IS A COORDINATION
 def writeProp(sentence, propcount, end, start = 1, zu = 0):
-	print "Enter writeProp function"
+	#print "Enter writeProp function"
 	propcount = propcount
 	if start != 0 :
 		beginProp = sentence.tokens[str(start)]
@@ -112,23 +113,23 @@ def writeProp(sentence, propcount, end, start = 1, zu = 0):
 			start = 0
 		else:
 			beginProp.them += "{"
-	else:
-		print "Something wrong with start parameter"
+	#else:
+	#	print "Something wrong with start parameter"
 	endProp = sentence.tokens[str(end)]
 	if endProp.them == "_" and zu > 0:
-		print "Cond 1"
+		#print "Cond 1"
 		endProp.them = "}Pz" + str(propcount)
 		propcount += 1
 	elif endProp.them == "_" and zu < 0:
-		print "Cond 2"
+		#print "Cond 2"
 		endProp.them = "}Pc" + str(propcount)
 		propcount += 1
 	elif endProp.them == "_":
-		print "Cond 3"
+		#print "Cond 3"
 		endProp.them = "}P" + str(propcount)
 		propcount += 1
 	else:
-		print "Cond 4"
+		#print "Cond 4"
 		endProp.them = "}P" + str(propcount) + endProp.them
 		propcount += 1
 	return propcount
@@ -136,6 +137,7 @@ def writeProp(sentence, propcount, end, start = 1, zu = 0):
 #############################################################################
 # Loop forward and backwards for thematicity relations Function
 def loop4back(sentence, v_id, word, spcount, begloop, endloop):
+	#print "entering loop4back"
 	begspan = 0
 	endspan = 0
 	subj = int(word.id)
@@ -288,13 +290,13 @@ for sentence in iCS.sentences:
 ################################################
 	# Complex sentences (more than one verbal and punctuation element)
 	if nV > 1 and nPunc >= 1 :
-		print "Complex sentence found "
+		#print "Complex sentence found "
 		################################################
 		# Conditions for subordinated relative clauses
 		################################################
 		if relclause != 0:
 			# check if there are more than 2 punc (e.g. marking enumeration)
-			print "Relative clause"
+			#print "Relative clause"
 			relpron = 0
 			endrel = 0
 			rel_v = ""
@@ -318,10 +320,10 @@ for sentence in iCS.sentences:
 					#else:
 					#	print "Something wrong in relList"
 			if relpron != 0 and endrel != 0:
-				print "Relative clause writing embedded proposition"
+				#print "Relative clause writing embedded proposition"
 				## Revise here annotate propositions. relpron is begprop. endprop can be next p in puncList
 				propcount = writeProp(sentence, propcount, endrel, relpron)
-				if rel_v != "":
+				if rel_v != "" and nSub < 2:
 					#print "Relative clause writing thematicity"
 					#print "SP count = ", spcount
 					## Main thematicity
@@ -333,7 +335,7 @@ for sentence in iCS.sentences:
 #####################################################################################################################
 		## Conditions for subordinated clauses (non-relative)
 		elif nSub != 0 :
-			print "Subordinated clause"
+			#print "Subordinated clause"
 			subpart = 0
 			endsub = 0
 			sub_v = ""
@@ -346,7 +348,7 @@ for sentence in iCS.sentences:
 				checkend = 0
 				# Checks whether the punctuation mark is not following a previous mark (e.g. :" or .")
 				if distpunt != 1:
-					print "Punctuation = ", p.id
+					#print "Punctuation = ", p.id
 					if idx != len(puncList)-1:
 						#print "IDX/ len = ", idx, len(puncList)
 						checkend = int(puncList[idx + 1].id)
@@ -354,7 +356,7 @@ for sentence in iCS.sentences:
 						checkend = endsent
 					written = 0
 					for s in subList:
-						print s
+						#print s
 						checks = int(s.id)
 						checkhead = s.head
 						if checks > checkp and checks < checkend and checks != prevpart:
@@ -384,16 +386,16 @@ for sentence in iCS.sentences:
 
 					if subpart != 0 and endsub != 0 and subpart != prevpart :
 						# CHECK HERE
-						print "Subordinated clause writing prop = ", subpart, " to ", endsub
+						#print "Subordinated clause writing prop = ", subpart, " to ", endsub
 						propcount = writeProp(sentence, propcount, endsub, subpart)
 						checkwords = endsub - subpart
 						## Check if there is coordination
 						if checkwords > 5 and nCD > 0 and zu == 0:
-							print "Entering coordination within juxtaposition P2"
+							#print "Entering coordination within juxtaposition P2"
 							propcount, spcount, coordspan = coordination(sentence, cdList, verbList, propcount, spcount, endsub, subpart)						
 						## Embedded THEM 
 						elif sub_v != "":
-							print "Subordinated clause writing thematicity"
+							#print "Subordinated clause writing thematicity"
 							## Main thematicity
 							thematicity(sentence, root_id, subpart, spcount)
 							## Rheme in main clause if there is no frontal subordination
@@ -422,7 +424,7 @@ for sentence in iCS.sentences:
 #####################################################################################################################
 		# Conditions for juxtaposed sentences
 		else :
-			print "Juxtaposed sentence"
+			#print "Juxtaposed sentence"
 			## Check begjux
 			begjux = 1
 			endjux = 0
@@ -439,7 +441,7 @@ for sentence in iCS.sentences:
 					#print "Beginning is = ", begjux
 					# Write P2
 					if checkv >= begjux and checkv < checkp :
-						print "Write P2"
+						#print "Write P2"
 						jux_v = v.id
 						endjux = checkp -1
 						propcount = writeProp(sentence, propcount, endjux, begjux, zu)
@@ -453,7 +455,7 @@ for sentence in iCS.sentences:
 							thematicity(sentence, jux_v, endjux, spcount)
 					# Write P3
 					if checkv >= begjux and checkv > checkp and prevpart == 0 and idx == (len(puncList)-1):
-						print "Write P3"
+						#print "Write P3"
 						endjux = endsent -1
 						prevpart = 1
 						propcount = writeProp(sentence, propcount, endjux, begjux, zu)
@@ -471,7 +473,7 @@ for sentence in iCS.sentences:
 ################################################
 	# Coordination
 	elif nV > 1 and nCD > 0:
-		print "Coordinated sentence write prop"
+		#print "Coordinated sentence write prop"
 		propcount, spcount, coordspan = coordination(sentence, cdList, verbList, propcount, spcount, endsent)
 		#print "Coord span = ", coordspan
 		if coordspan == 0:
@@ -485,7 +487,7 @@ for sentence in iCS.sentences:
 				begsub = int(s.id)
 				endsub = int(s.head)
 			if begsub != 0 and endsub != 0:
-				print "Write prop"
+				#print "Write prop"
 				propcount = writeProp(sentence, propcount, endsub, begsub)
 				checklength = endsub - begsub
 				if checklength > 6:

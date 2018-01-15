@@ -88,10 +88,10 @@ def insertProsodyTag(value, result, token, pos, splitWith = ""):
 	label = "<prosody "+ key + "=\""+ plusValue + "%\">"
 	result.insert(pos,label)
 	if splitWith == "":
-		result.append("<\\prosody>")
+		result.append("</prosody>")
 	else:
 		wordend = token.split(splitWith)[0]
-		result.append(wordend + "<\\prosody>")
+		result.append(wordend + "</prosody>")
 	#return plusValue
 
 def insertcombTag (valp,valr, result, token, pos, splitWith = ""):
@@ -106,10 +106,10 @@ def insertcombTag (valp,valr, result, token, pos, splitWith = ""):
 	label = "<prosody pitch=\""+ plusValuep + "%\" rate=\"" + plusValuer + "%\">"
 	result.insert(pos,label)
 	if splitWith == "":
-		result.append("<\\prosody>")
+		result.append("</prosody>")
 	else:
 		wordend = token.split(splitWith)[0]
-		result.append(wordend + "<\\prosody>")
+		result.append(wordend + "</prosody>")
 	#return plusValuep, plusValuer
 
 def insertBreak(value, result, token, conll = 1):
@@ -120,9 +120,10 @@ def insertBreak(value, result, token, conll = 1):
 		wordend = token.split(">")[0]
 		result.append(wordend + ">" + label)
 def insertProp(value):
-	label = "<prosody pitch=\""+ str(value) + "%\">"
+	newvalue = getPlusValue(value)
+	label = "<prosody pitch=\""+ newvalue + "%\">"
 	result.insert(pos,label)
-	result.append("<\\prosody>")
+	result.append("</prosody>")
 
 ########################################
 result = []
