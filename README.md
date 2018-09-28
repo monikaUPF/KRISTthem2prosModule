@@ -8,3 +8,9 @@ This repository contains two modules for the generation of thematicity-based pro
     - mod2_them2ssml.py : it derives ssml prosody tags based on thematicity generated in the previous module.
         Input: conll file annotated with thematicity
         Output: txt file with SSML prosody tags
+
+# Citation
+If you use, modify or publish any articles based on the contents of this repository, please cite the following paper:
+
+Domínguez, M., Burga, A., Farrús, M and Wanner, L. Towards expressive prosody generation in TTS for reading aloud applications. In proceedings of IberSPEECH 2018, Sarcelona, Spain.
+
